@@ -1,0 +1,29 @@
+body {
+    background-image: url(../images/map.jpg);
+    background-size: 100%;
+    margin: 0;
+}
+
+.container {
+    background-color: #c4b9b9;
+    opacity: .85;
+    width: 780px;
+    height: 400px;
+    margin: 50px 250px;
+    padding: 20px;
+    border: seashell solid;
+}
+
+.title {
+    font-family: 'Six Caps', sans-serif;
+    font-size: 100px;
+    text-align: center;
+    margin-bottom: 25px;
+    margin-top: 20px;
+}
+
+#timer{
+    font-family: 'Merriweather', serif;
+    text-align: center;
+    font-size: 30px;
+}
