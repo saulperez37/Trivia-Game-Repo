@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    //questions & answers
     let questionOptions = [
         {
             question: "Name the largest continent in the world?",
@@ -50,29 +51,68 @@ $(document).ready(function () {
             picture: "assets/images/mount_everest.jpg",
         }];
 
-        console.log(questionOptions);
-        
-
-        let correctAnswers = 0;
-        let wrongAnswers = 0;
-        let unanswered = 0;
-        let userGuess = "";
-        let timer = 20;
-        let running = false;
-        let hold = [];
+    console.log(questionOptions);
 
 
-        $("#start").on("click", function () {
-            $("#start").hide();
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let unanswered = 0;
+    let userGuess = "";
+    let timer = 20;
+    let running = false;
 
-            // for(let i = 0; i < questionOptions.length; i++){
-            //     hold.push(questionOptions[i]);
-            // }
-        })
 
-        function startTimer () {
-            if(!)
+
+    //event listener for start button to begin game and display first question
+    $("#start").on("click", function () {
+        $("#start").hide();
+        startTimer();
+        showQuestion();
+    })
+
+    //function to run timer
+    function startTimer() {
+        if (!running) {
+            let interval = setInterval(countDown, 1000 * 1);
+            running = true;
         }
+    }
+
+    //function for timer count down
+    function countDown() {
+        $("#time-remaining").html("<h2>Time Remaining: " + timer + " Seconds<h2>");
+        timer--;
+        // console.log(timer);
+    }
+
+    //function to show question on screen
+    function showQuestion() {
+
+        let index = Math.floor(Math.random() * questionOptions.length);
+        let selection = questionOptions[index];
+        console.log(selection);
+
+        $("#questionBox").html("<h2>" + selection.question + "</h2>");
+
+        for (let i = 0; i < selection.choices.length; i++) {
+            let userChoice = $("<div>");
+            userChoice.addClass("answerChoice");
+            userChoice.html(selection.choices[i]);
+            userChoice.attr("data-guessvalue", i);
+            $("#answerBox").append(userChoice);
+
+        }
+
+
+        // for (let j = 0; j < questionOptions.length; j++){
+        //     selection = questionOptions[j];
+        //     console.log(selection);
+
+    }
+
+
+
+
 
 
 });
