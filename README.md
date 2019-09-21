@@ -1,2 +1,3 @@
 # Trivia-Game-Repo
-repo for trivia game
+
+In this Trivia game the user will begin by clicking the start button to display the first trivia quesion. The user will be given 15 seconds to answer the question displayed by selection one of the options. The user will be given 4 different answers to choose from. If the correct answer is chosen the computer will notify the user and display an image related to the answer. If the user selects incorrectly the computer will notify the user and display the correct answer along with the image. If time expires before an answer is selected the correct answer will be shown and a point will be added to the user's unanwsered list. After answering (right/wrong) or letting the timer expire the computer will move onto the next question. After all questions have been displayed a screen will display the number of correct, incorrect and unanswered questions. In the same screen the user has the option to restart the game.
