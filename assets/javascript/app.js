@@ -3,56 +3,55 @@ $(document).ready(function () {
     //questions & answers
     let questionOptions = [
         {
-            question: "Name the largest continent in the world?",
+            question: "Which is the largest continent in the world?",
             choices: ["Asia", "Europe", "Antarctica", "North America"],
             answer: 0,
             picture: "assets/images/asia.png",
         },
         {
-            question: "Name the largest ocean in the world?",
+            question: "Which is the largest ocean in the world?",
             choices: ["Atlantic", "Pacific", "Indian", "Arctic"],
             answer: 1,
             picture: "assets/images/pacific_ocean.png",
         },
         {
-            question: "Name the largest desert in the world?",
+            question: "Which is the largest desert in the world?",
             choices: ["Arabian", "Syrian", "Sahara", "Gobi"],
             answer: 2,
             picture: "assets/images/sahara_desert.jpg",
         },
         {
-            question: "Name the longest river in the world?",
+            question: "Which is the longest river in the world?",
             choices: ["Amazon", "Mississippi", "Congo", "Nile"],
             answer: 3,
             picture: "assets/images/nile_river.png",
         },
         {
-            question: "Name the tallest mountain range in the world?",
+            question: "Which is the tallest mountain range in the world?",
             choices: ["Himilaya", "Andes", "Kunlun", "Karakoram"],
             answer: 0,
             picture: "assets/images/himalaya.jpg",
         },
         {
-            question: "Name the largest country in the world?",
+            question: "Which is the largest country in the world?",
             choices: ["United States", "Russia", "China", "Canada"],
             answer: 1,
             picture: "assets/images/russia.jpg",
         },
         {
-            question: "Name the largest island in the world?",
+            question: "Which is the largest island in the world?",
             choices: ["Madagascar", "Great Britain", "Greenland", "New Guinea"],
             answer: 2,
             picture: "assets/images/greenland.jpg",
         },
         {
-            question: "Name the highest mountain in the world?",
+            question: "Which is the highest mountain in the world?",
             choices: ["K2", "Mount Fuji", "Mount Kilimanjaro", "Mount Everest"],
             answer: 3,
             picture: "assets/images/mount_everest.jpg",
         }];
 
-    console.log(questionOptions);
-
+    // console.log(questionOptions);
 
     let correctAnswers = 0;
     let wrongAnswers = 0;
@@ -61,8 +60,12 @@ $(document).ready(function () {
     let running = false;
     let interval;
     let selection;
-    let newArray = [];
+    let userGuess = "";
+    let index;
+    let numOfQuestions = questionOptions.length;
+    let holder = [];
 
+    $("#restart").hide();
 
     //event listener for start button to begin game and display first question
     $("#start").on("click", function () {
@@ -70,6 +73,10 @@ $(document).ready(function () {
         showQuestion();
         startTimer();
         countDown();
+        //this push questions into an empty array to display after restart button is clicked
+        for (let k = 0; k < questionOptions.length; k++) {
+            holder.push(questionOptions[k]);
+        }
     })
 
     //function to run timer
@@ -105,9 +112,9 @@ $(document).ready(function () {
     function showQuestion() {
 
         //this will select a random index from the questionOptions 
-        let index = Math.floor(Math.random() * questionOptions.length);
+        index = Math.floor(Math.random() * questionOptions.length);
         selection = questionOptions[index];
-        console.log(selection);
+        // console.log(selection);
 
         $("#questionBox").html("<h2>" + selection.question + "</h2>");
 
@@ -120,40 +127,67 @@ $(document).ready(function () {
             $("#answerBox").append(userChoice);
         }
 
-
-        //event listener answer choices displayed
+        //event listener for answer choices displayed
         $(".answerChoice").on("click", function () {
-            let userGuess = parseInt($(this).attr("data-guessvalue"));
+            userGuess = parseInt($(this).attr("data-guessvalue"));
 
             if (userGuess === selection.answer) {
                 stop();
                 correctAnswers++;
-                // userGuess = "";
-                console.log(userGuess);
+                userGuess = "";
+                // console.log(userGuess);
                 $("#answerBox").html("<h2>That's Correct!</h2>");
                 showPic();
             }
             else {
                 stop();
                 wrongAnswers++;
-                console.log(userGuess);
+                // console.log(userGuess);
                 $("#answerBox").html("<h2>Sorry! The correct answer is: " + selection.choices[selection.answer] + "</h2>");
                 showPic();
             }
         })
-
-        function showPic (){
-            $("#answerBox").append("<img src=" + selection.picture + " width = 250px>")
-            newArray.push(selection);
-            questionOptions.splice(index, 1);
-        }
-
-
     }
 
+    //this function will dispay image after answer is selected
+    function showPic() {
+        $("#answerBox").append("<img src=" + selection.picture + " width = 250px>")
+        questionOptions.splice(index, 1);
 
+        setTimeout(function () {
+            $("#answerBox").empty();
+            timer = 15;
 
+            if ((wrongAnswers + correctAnswers + unanswered) === numOfQuestions) {
+                $("#questionBox").empty();
+                $("#questionBox").html("<h2>GAME OVER! </h2>");
+                $("#answerBox").append("<h3> Correct: " + correctAnswers + "</h3>");
+                $("#answerBox").append("<h3> Incorrect: " + wrongAnswers + "</h3>");
+                $("#answerBox").append("<h3> Unanswered: " + unanswered + "</h3>");
+                $("#restart").show();
+                correctAnswers = 0;
+                wrongAnswers = 0;
+                unanswered = 0;
+            }
+            else {
+                startTimer();
+                showQuestion();
+            }
+        }, 1000 * 3);
+    }
 
+    //event listener that will restart game when restart button is clicked
+    $("#restart").on("click", function () {
+        $("#restart").hide();
+        $("#answerBox").empty();
+        $("#questionBox").empty();
 
+        //this will redisplay questions in holder array after restart button is clicked
+        for (let j = 0; j < holder.length; j++) {
+            questionOptions.push(holder[j]);
+        }
+        startTimer();
+        showQuestion();
+    })
 
 });
