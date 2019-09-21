@@ -18,7 +18,7 @@ $(document).ready(function () {
             question: "Name the largest desert in the world?",
             choices: ["Arabian", "Syrian", "Sahara", "Gobi"],
             answer: 2,
-            picture: "assets/images/sahara_desert.png",
+            picture: "assets/images/sahara_desert.jpg",
         },
         {
             question: "Name the longest river in the world?",
@@ -57,23 +57,25 @@ $(document).ready(function () {
     let correctAnswers = 0;
     let wrongAnswers = 0;
     let unanswered = 0;
-    let userGuess = "";
-    let timer = 20;
+    let timer = 15;
     let running = false;
-
+    let interval;
+    let selection;
+    let newArray = [];
 
 
     //event listener for start button to begin game and display first question
     $("#start").on("click", function () {
         $("#start").hide();
-        startTimer();
         showQuestion();
+        startTimer();
+        countDown();
     })
 
     //function to run timer
     function startTimer() {
         if (!running) {
-            let interval = setInterval(countDown, 1000 * 1);
+            interval = setInterval(countDown, 1000 * 1);
             running = true;
         }
     }
@@ -82,31 +84,70 @@ $(document).ready(function () {
     function countDown() {
         $("#time-remaining").html("<h2>Time Remaining: " + timer + " Seconds<h2>");
         timer--;
-        // console.log(timer);
+
+        //timer stops at zero
+        //-1 was chosen to display 0. If = to 0 timer displays one and ends game
+        if (timer === -1) {
+            stop();
+            unanswered++;
+            $("#answerBox").html("<h2> Time's Up! The correct answer is: " + selection.choices[selection.answer] + "</h2>");
+            showPic();
+        }
+    }
+
+    //function to stop timer
+    function stop() {
+        running = false;
+        clearInterval(interval);
     }
 
     //function to show question on screen
     function showQuestion() {
 
+        //this will select a random index from the questionOptions 
         let index = Math.floor(Math.random() * questionOptions.length);
-        let selection = questionOptions[index];
+        selection = questionOptions[index];
         console.log(selection);
 
         $("#questionBox").html("<h2>" + selection.question + "</h2>");
 
+        //this will display the array contents for the available choices
         for (let i = 0; i < selection.choices.length; i++) {
             let userChoice = $("<div>");
             userChoice.addClass("answerChoice");
             userChoice.html(selection.choices[i]);
             userChoice.attr("data-guessvalue", i);
             $("#answerBox").append(userChoice);
-
         }
 
 
-        // for (let j = 0; j < questionOptions.length; j++){
-        //     selection = questionOptions[j];
-        //     console.log(selection);
+        //event listener answer choices displayed
+        $(".answerChoice").on("click", function () {
+            let userGuess = parseInt($(this).attr("data-guessvalue"));
+
+            if (userGuess === selection.answer) {
+                stop();
+                correctAnswers++;
+                // userGuess = "";
+                console.log(userGuess);
+                $("#answerBox").html("<h2>That's Correct!</h2>");
+                showPic();
+            }
+            else {
+                stop();
+                wrongAnswers++;
+                console.log(userGuess);
+                $("#answerBox").html("<h2>Sorry! The correct answer is: " + selection.choices[selection.answer] + "</h2>");
+                showPic();
+            }
+        })
+
+        function showPic (){
+            $("#answerBox").append("<img src=" + selection.picture + " width = 250px>")
+            newArray.push(selection);
+            questionOptions.splice(index, 1);
+        }
+
 
     }
 
